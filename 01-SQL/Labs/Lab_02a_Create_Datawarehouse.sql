@@ -1,7 +1,7 @@
 # DROP database `northwind_dw`;
-CREATE DATABASE `Northwind_dw` /*!40100 DEFAULT CHARACTER SET latin1 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE `northwind_dw` /*!40100 DEFAULT CHARACTER SET latin1 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
-USE Northwind_DW3;
+USE Northwind_dw;
 
 # DROP TABLE `dim_customers`;
 CREATE TABLE `dim_customers` (
@@ -26,6 +26,7 @@ CREATE TABLE `dim_customers` (
   KEY `state_province` (`state_province`)
 ) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4;
 
+TRUNCATE TABLE dim_customers;
 
 # DROP TABLE `dim_employees`;
 CREATE TABLE `dim_employees` (
@@ -53,6 +54,7 @@ CREATE TABLE `dim_employees` (
   KEY `state_province` (`state_province`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 
+TRUNCATE TABLE dim_employees;
 
 # DROP TABLE `dim_products`;
 CREATE TABLE `dim_products` (
@@ -71,6 +73,7 @@ CREATE TABLE `dim_products` (
   KEY `product_code` (`product_code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4;
 
+TRUNCATE TABLE dim_products;
 
 # DROP TABLE `dim_shippers`;
 CREATE TABLE `dim_shippers` (
@@ -88,6 +91,7 @@ CREATE TABLE `dim_shippers` (
   KEY `state_province` (`state_province`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
+TRUNCATE TABLE dim_shippers;
 
 # DROP TABLE `dim_suppliers`;
 CREATE TABLE `dim_suppliers` (
@@ -102,6 +106,7 @@ CREATE TABLE `dim_suppliers` (
   KEY `last_name` (`last_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 
+TRUNCATE TABLE dim_suppliers;
 
 -- ----------------------------------------------------------------------
 -- TODO: JOIN the orders, order_details, order_details_status and 
@@ -109,4 +114,34 @@ CREATE TABLE `dim_suppliers` (
 -- To keep things simple, don't include purchase order or inventory info
 -- ----------------------------------------------------------------------
 # DROP TABLE `fact_orders`;
-CREATE TABLE `fact_orders`;
+
+CREATE TABLE `fact_orders` (
+  `fact_order_key` int NOT NULL AUTO_INCREMENT,
+  `order_key` int(11) NOT  NULL,
+  `employee_key` int DEFAULT NULL,
+  `customer_key` int DEFAULT NULL,
+  `product_key` int DEFAULT NULL,
+  `shipper_key` int DEFAULT NULL,
+  `quantity` decimal(18,4) NOT NULL DEFAULT '0.0000',
+  `unit_price` decimal(19,4) DEFAULT '0.0000',
+  `discount` double NOT NULL DEFAULT '0',
+  `date_allocated` datetime DEFAULT NULL,
+  `order_date` datetime DEFAULT NULL,
+  `shipped_date` datetime DEFAULT NULL,
+  `paid_date` datetime DEFAULT NULL,
+  `shipping_fee` decimal(19,4) DEFAULT '0.0000',
+  `taxes` decimal(19,4) DEFAULT '0.0000',
+  `tax_rate` double DEFAULT '0',
+  `payment_type` varchar(50) DEFAULT NULL,
+  `order_status` varchar(50) NOT NULL,
+  `order_details_status` varchar(50) NOT NULL,
+  PRIMARY KEY (`fact_order_key`),
+  KEY `customer_key` (`customer_key`),
+  KEY `employee_key` (`employee_key`),
+  KEY `order_key` (`order_key`),
+  KEY `product_key` (`product_key`),
+  KEY `shipper_key` (`shipper_key`),
+  KEY `fk_orders_orders_status` (`order_status`)
+) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8mb3;
+
+TRUNCATE TABLE fact_orders;
